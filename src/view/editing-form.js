@@ -131,24 +131,30 @@ const createEditingFormTemplate = (point, destinations, offers) => {
 };
 
 export default class EditingFormView {
+
+  #element = null;
+  #point = null;
+  #destination = null;
+  #offers = null;
+
   constructor(point, destination, offers) {
-    this.point = point;
-    this.destination = destination;
-    this.offers = offers;
+    this.#point = point;
+    this.#destination = destination;
+    this.#offers = offers;
   }
 
-  getTemplate () {
-    return createEditingFormTemplate(this.point, this.destination, this.offers);
+  get template () {
+    return createEditingFormTemplate(this.#point, this.#destination, this.#offers);
   }
 
-  getElement() {
-    if (!this.element){
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element){
+      this.#element = createElement(this.template);
     }
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
