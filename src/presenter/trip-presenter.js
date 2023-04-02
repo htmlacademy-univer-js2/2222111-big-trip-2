@@ -31,8 +31,7 @@ export default class TripPresenter {
     else{
       render(new SortingView(), this.#container);
       render(this.#component, this.#container);
-      
-      for (const point of this.#boardPoints){
+      for(const point of this.#boardPoints){
         this.#renderTripPoint(point);
       }
     }
@@ -67,5 +66,5 @@ export default class TripPresenter {
 
     render(pointComponent, this.#component.element);
 
-  }
+  };
 }
