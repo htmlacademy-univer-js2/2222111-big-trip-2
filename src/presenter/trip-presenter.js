@@ -47,7 +47,7 @@ export default class TripPresenter {
     };
 
     const onEscKeyDown = (evt) => {
-      if(evt.key == 'Escape' || evt.key == 'Esc'){
+      if(evt.key === 'Escape' || evt.key === 'Esc'){
         evt.preventDefault();
         replaceComponents(pointComponent, editingFormComponent);
         document.removeEventListener('keydown', onEscKeyDown);
