@@ -59,7 +59,7 @@ export default class WayPointView{
   #element = null;
   #point = null;
   #destination = null;
-  #offers = null
+  #offers = null;
 
   constructor(point, destination, offers){
     this.#point = point;

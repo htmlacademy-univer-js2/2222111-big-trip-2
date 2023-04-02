@@ -3,6 +3,7 @@ import EditingFormView from '../view/editing-form.js';
 import SortingView from '../view/sorting.js';
 import TripListView from '../view/trip-list.js';
 import WayPointView from '../view/way-point.js';
+import NoPointView from '../view/no-point.js';
 
 export default class TripPresenter {
 
@@ -24,11 +25,15 @@ export default class TripPresenter {
     this.#destinations = [...this.#pointsModel.destinations];
     this.#offers = [...this.#pointsModel.offers];
 
-    render(new SortingView(), this.#container);
-    render(this.#component, this.#container);
-
-    for (const point of this.#boardPoints){
-      this.#renderTripPoint(point);
+    if(this.#boardPoints.length === 0){
+      render(new NoPointView(), this.#container);
+    }
+    else{
+      render(new SortingView(), this.#container);
+      render(this.#component, this.#container);
+      for(const point of this.#boardPoints){
+        this.#renderTripPoint(point);
+      }
     }
   }
 
@@ -41,7 +46,7 @@ export default class TripPresenter {
     };
 
     const onEscKeyDown = (evt) => {
-      if(evt.key == 'Escape' || evt.key == 'Esc'){
+      if(evt.key === 'Escape' || evt.key === 'Esc'){
         evt.preventDefault();
         replaceComponents(pointComponent, editingFormComponent);
         document.removeEventListener('keydown', onEscKeyDown);
@@ -61,5 +66,5 @@ export default class TripPresenter {
 
     render(pointComponent, this.#component.element);
 
-  }
+  };
 }
