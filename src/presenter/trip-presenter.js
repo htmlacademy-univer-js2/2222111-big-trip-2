@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render, replace } from '../framework/render.js';
 import EditingFormView from '../view/editing-form.js';
 import SortingView from '../view/sorting.js';
 import TripListView from '../view/trip-list.js';
@@ -42,7 +42,7 @@ export default class TripPresenter {
     const editingFormComponent = new EditingFormView(point, this.#destinations, this.#offers);
 
     const replaceComponents = (newComponent, oldComponent) => {
-      this.#component.element.replaceChild(newComponent.element,oldComponent.element);
+      replace(newComponent, oldComponent);
     };
 
     const onEscKeyDown = (evt) => {
@@ -53,15 +53,19 @@ export default class TripPresenter {
       }
     };
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setEditClickHandler(() => {
       replaceComponents(editingFormComponent, pointComponent);
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    editingFormComponent.element.querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
-      evt.preventDefault();
+    editingFormComponent.setPointClickHandler(() => {
       replaceComponents(pointComponent, editingFormComponent);
       document.RemoveEventListener('keydown', onEscKeyDown);
+    });
+
+    editingFormComponent.setSubmitHandler(() => {
+      replaceComponents(pointComponent, editingFormComponent);
+      document.removeEventListener('keydown', onEscKeyDown);
     });
 
     render(pointComponent, this.#component.element);
