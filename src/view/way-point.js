@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {humanizePointDueDate, duration, getDate, getTime } from '../util.js';
 
 const renderOffers = (allOffers, checkedOffers) => {
@@ -54,14 +54,14 @@ const createWayPointTemplate = (point, destinations, offers) => {
   );
 };
 
-export default class WayPointView{
+export default class WayPointView extends AbstractView{
 
-  #element = null;
   #point = null;
   #destination = null;
   #offers = null;
 
   constructor(point, destination, offers){
+    super();
     this.#point = point;
     this.#destination = destination;
     this.#offers = offers;
@@ -71,14 +71,13 @@ export default class WayPointView{
     return createWayPointTemplate(this.#point, this.#destination, this.#offers);
   }
 
-  get element(){
-    if(!this.#element){
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
+  setEditClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
 
-  removeElement(){
-    this.#element = null;
-  }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click();
+  };
 }
