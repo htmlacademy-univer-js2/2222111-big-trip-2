@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { getDateTime } from '../util.js';
+import { getDateTime } from '../utils/date.js';
 
 const renderDestinationPictures = (pictures) => {
   let result = '';
