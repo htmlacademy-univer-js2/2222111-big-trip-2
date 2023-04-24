@@ -153,7 +153,7 @@ export default class EditingFormView extends AbstractView{
   };
 
   setSubmitHandler = (callback) => {
-    this._callback.click = callback;
+    this._callback.submit = callback;
     this.element.querySelector('form').addEventListener('submit', this.#submitHandler);
   };
 
@@ -164,6 +164,6 @@ export default class EditingFormView extends AbstractView{
 
   #submitHandler = (evt) =>{
     evt.preventDefault();
-    this._callback.click();
+    this._callback.submit(this.#point);
   };
 }
