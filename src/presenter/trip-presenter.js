@@ -1,7 +1,6 @@
 import { render } from '../framework/render.js';
 import { updateItem } from '../utils/common.js';
-import { SortType } from '../utils/sort.js';
-import { sortPricePoint, sortDayPoint, sortTimePoint } from '../utils/date.js';
+import { SortType, sortPricePoint, sortDayPoint, sortTimePoint } from '../utils/sort.js';
 import SortingView from '../view/sorting.js';
 import TripListView from '../view/trip-list.js';
 import NoPointView from '../view/no-point.js';
