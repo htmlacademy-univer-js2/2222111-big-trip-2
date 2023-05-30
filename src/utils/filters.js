@@ -1,10 +1,5 @@
 import { isPointDateInFuture, isPointDateInPast } from './date.js';
-
-const FilterType = {
-  EVERYTHING: 'everything',
-  FUTURE: 'future',
-  PAST: 'past'
-};
+import { FilterType } from '../const.js';
 
 const filter = {
   [FilterType.EVERYTHING]: (points) => points,
