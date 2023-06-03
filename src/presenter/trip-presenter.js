@@ -4,6 +4,7 @@ import TripListView from '../view/trip-list.js';
 import NoPointView from '../view/no-point.js';
 import PointPresenter from './point-presenter.js';
 import PointNewPresenter from './point-new-presenter.js';
+import LoadingView from '../view/loading.js';
 import { sorting } from '../utils/sort.js';
 import { filter } from '../utils/filters.js';
 import { UpdateType, UserAction, SortType, FilterType } from '../const.js';
@@ -11,25 +12,39 @@ import { UpdateType, UserAction, SortType, FilterType } from '../const.js';
 export default class TripPresenter {
 
   #tripContainer = null;
-  #pointListComponent = new TripListView();
   #pointsModel = null;
   #filterModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
 
   #noPointComponent = null;
   #sortComponent = null;
+  #pointListComponent = new TripListView();
+  #loadingComponent = new LoadingView();
 
   #pointPresenters = new Map();
   #currentSortType = SortType.DAY;
   #pointNewPresenter = null;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
-  constructor(tripContainer, pointsModel, filterModel) {
+  constructor({tripContainer, pointsModel, filterModel, destinationsModel, offersModel}) {
     this.#tripContainer = tripContainer;
     this.#pointsModel = pointsModel;
     this.#filterModel = filterModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
 
-    this.#pointNewPresenter = new PointNewPresenter(this.#pointListComponent.element, this.#handleViewAction, this.#pointsModel);
+    this.#pointNewPresenter = new PointNewPresenter({
+      pointListContainer: this.#pointListComponent.element,
+      changeData: this.#handleViewAction,
+      pointsModel: this.#pointsModel,
+      destinationsModel: this.#destinationsModel,
+      offersModel: this.#offersModel
+    });
 
+    this.#destinationsModel.addObserver(this.#handleModelEvent);
+    this.#offersModel.addObserver(this.#handleModelEvent);
     this.#pointsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
   }
@@ -48,13 +63,17 @@ export default class TripPresenter {
   }
 
   #renderBoard = () => {
+    if (this.#isLoading) {
+      this.#renderLoading();
+      return;
+    }
     const pointCount = this.points.length;
     if (pointCount === 0) {
       this.#renderNoPoints();
       return;
     }
+    this.#renderPointList(this.points);
     this.#renderSort();
-    this.#renderPointList();
   };
 
   createPoint = (callback) => {
@@ -95,6 +114,12 @@ export default class TripPresenter {
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        remove(this.#noPointComponent);
+        this.#renderBoard();
+        break;
     }
   };
 
@@ -116,7 +141,14 @@ export default class TripPresenter {
   };
 
   #renderPoint = (point) => {
-    const pointPresenter = new PointPresenter(this.#pointListComponent.element, this.#pointsModel, this.#handleViewAction, this.#handleModeChange);
+    const pointPresenter = new PointPresenter({
+      pointListContainer: this.#pointListComponent.element,
+      pointsModel: this.#pointsModel,
+      changeData: this.#handleViewAction,
+      changeMode: this.#handleModeChange,
+      destinationsModel: this.#destinationsModel,
+      offersModel: this.#offersModel,
+    });
     pointPresenter.init(point);
     this.#pointPresenters.set(point.id, pointPresenter);
   };
@@ -130,9 +162,13 @@ export default class TripPresenter {
     render(this.#noPointComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
   };
 
-  #renderPointList = () => {
+  #renderPointList = (points) => {
     render(this.#pointListComponent, this.#tripContainer);
-    this.#renderPoints(this.points);
+    this.#renderPoints(points);
+  };
+
+  #renderLoading = () => {
+    render(this.#loadingComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
   };
 
   #clearBoard = ({resetSortType = false} = {}) => {

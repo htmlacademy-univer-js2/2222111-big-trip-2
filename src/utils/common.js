@@ -11,15 +11,5 @@ const getRandomElement = (elements) => {
   return elements[getRandomInteger(MIN, max)];
 };
 
-const toUpperCaseFirstLetter = (value) =>{
-  if (!value){
-    return value;
-  }
-
-  const firstLetter = value[0].toUpperCase();
-  const remainingPart = value.slice(1);
-  return firstLetter + remainingPart;
-};
-
-export {getRandomElement, getRandomInteger, toUpperCaseFirstLetter};
+export {getRandomElement, getRandomInteger};
 

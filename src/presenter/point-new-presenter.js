@@ -5,51 +5,56 @@ import { UserAction, UpdateType } from '../const.js';
 
 export default class PointNewPresenter {
   #pointListContainer = null;
-  #editFormComponent = null;
+  #createPointComponent = null;
   #changeData = null;
   #destroyCallback = null;
+
   #pointsModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
+
   #destinations = null;
   #offers = null;
-  #isNewPoint = true;
 
-  constructor(pointListContainer, changeData, pointsModel) {
+  constructor({pointListContainer, changeData, pointsModel, destinationsModel, offersModel}) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
     this.#pointsModel = pointsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
   }
 
   init = (callback) => {
     this.#destroyCallback = callback;
 
-    if (this.#editFormComponent) {
+    if (this.#createPointComponent) {
       return;
     }
-    this.#destinations = [...this.#pointsModel.destinations];
-    this.#offers = [...this.#pointsModel.offers];
+    this.#destinations = [...this.#destinationsModel.destinations];
+    this.#offers = [...this.#offersModel.offers];
 
-    this.#editFormComponent = new EditingFormView({
+    this.#createPointComponent = new EditingFormView({
       destination: this.#destinations,
       offers: this.#offers,
-      isNewPoint: this.#isNewPoint
+      isNewPoint: true
     });
-    this.#editFormComponent.setSubmitHandler(this.#handleFormSubmit);
-    this.#editFormComponent.setDeleteClickHandler(this.#handleDeleteClick);
+    this.#createPointComponent.setSubmitHandler(this.#handleFormSubmit);
+    this.#createPointComponent.setDeleteClickHandler(this.#handleDeleteClick);
 
-    render(this.#editFormComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#createPointComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#onEscKeyDown);
   };
 
   destroy = () => {
-    if (this.#editFormComponent === null) {
+    if (this.#createPointComponent === null) {
       return;
     }
 
     this.#destroyCallback?.();
 
-    remove(this.#editFormComponent);
-    this.#editFormComponent = null;
+    remove(this.#createPointComponent);
+    this.#createPointComponent = null;
 
     document.removeEventListener('keydown', this.#onEscKeyDown);
   };
