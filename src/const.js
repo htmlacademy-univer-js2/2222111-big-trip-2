@@ -1,5 +1,3 @@
-const SORT_TYPES_DISABLED = ['event', 'offer'];
-
 const SortType = {
   DAY: 'day',
   EVENT: 'event',
@@ -7,6 +5,8 @@ const SortType = {
   PRICE: 'price',
   OFFER: 'offer',
 };
+
+const SORT_TYPES_DISABLED = [SortType.EVENT, SortType.OFFER];
 
 const UserAction = {
   UPDATE_POINT: 'UPDATE_POINT',
@@ -61,7 +61,14 @@ const PointTypeDescription = {
 
 const ApiServiceResponseMethod = {
   GET: 'GET',
-  PUT: 'PUT'
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
 };
 
-export {SortType, UserAction, UpdateType, FilterType, SORT_TYPES_DISABLED, SortTypeDescription, PointType, PointTypeDescription, ApiServiceResponseMethod};
+const TimeLimit = {
+  LOWER_LIMIT: 300,
+  UPPER_LIMIT: 1000
+};
+
+export {SortType, UserAction, UpdateType, FilterType, SORT_TYPES_DISABLED, SortTypeDescription, PointType, PointTypeDescription, ApiServiceResponseMethod, TimeLimit};

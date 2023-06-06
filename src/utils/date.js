@@ -14,7 +14,7 @@ const getHoursOutput = (days, restHours) => (days <= 0 && restHours <= 0) ? '' :
 
 const getMinutesOutput = (restMinutes) => `${`${restMinutes}`.padStart(2, '0')}M`;
 
-const duration = (dateFrom, dateTo) => {
+const getDuration = (dateFrom, dateTo) => {
   const start = dayjs(dateFrom);
   const end = dayjs(dateTo);
   const difference = end.diff(start, 'minute');
@@ -43,4 +43,4 @@ const isPointDateInPast = (dateTo) => dayjs().diff(dateTo, 'minute') > 0;
 
 const isPointDateInFuture = (dateFrom) => dayjs().diff(dateFrom, 'minute') <= 0;
 
-export {humanizePointDueDate, duration, getDate, getDateTime, getTime, isPointDateInPast, isPointDateInFuture, isPointDateInProgress};
+export {humanizePointDueDate, getDuration, getDate, getDateTime, getTime, isPointDateInPast, isPointDateInFuture, isPointDateInProgress};
